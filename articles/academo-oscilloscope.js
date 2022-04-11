@@ -1,1 +1,0 @@
-var osc = new Oscilloscope("#oscilloscope", {lineWidth: 1, lineColor: "red"});

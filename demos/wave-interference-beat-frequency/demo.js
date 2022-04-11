@@ -18,6 +18,15 @@ var demo = new Demo({
 			units: "Hz",
 			color: "#d62728"
 		},
+		f3: {
+			title: "\\( f_{3} \\)",
+			value: 257,
+			// range: [230, 270],
+			range: [1, 500],
+			resolution: 0.1,
+			units: "Hz",
+			color: "#2ad627"
+		},
 		zoom: {
 			title: "Zoom",
 			value: 3,
@@ -63,10 +72,12 @@ var demo = new Demo({
 		  
 		  this.gainNode1 = this.audioContext.createGain();
 		  this.gainNode2 = this.audioContext.createGain();
+		  this.gainNode3 = this.audioContext.createGain();
 		  
 		  
 		  this.gainNode1.gain.value = 0.0;
 		  this.gainNode2.gain.value = 0.0;
+		  this.gainNode3.gain.value = 0.0;
 		  
 
 		  this.oscillator1 = this.audioContext.createOscillator();
@@ -81,10 +92,17 @@ var demo = new Demo({
 		  this.oscillator2.connect(this.gainNode2);
 		  this.oscillator2.start(0);
 
+		  this.oscillator3 = this.audioContext.createOscillator();
+		  this.oscillator3.type = 'sine';
+		  this.oscillator3.frequency.setValueAtTime(this.ui.f3.value, 0);
+		  this.oscillator3.connect(this.gainNode3);
+		  this.oscillator3.start(0);
+
 
 
 		  this.gainNode1.connect(this.audioContext.destination);
 		  this.gainNode2.connect(this.audioContext.destination);
+		  this.gainNode3.connect(this.audioContext.destination);
 		}
 
 
@@ -106,6 +124,9 @@ var demo = new Demo({
 						.attr("stroke", "red")
 						.attr("fill", "none");
 
+		this.path3 = this.svg.append("path")
+						.attr("stroke", "green")
+						.attr("fill", "none");
 
 
 		this.path12 = this.svg.append("path")
@@ -119,7 +140,7 @@ var demo = new Demo({
 					.domain(this.waveHorizontalExtent)
 					.range([0,this.width]);
 
-		this.yScale = [0, -14];
+		this.yScale = [0, -20];
 
 		this.canvasYScale = d3.scale.linear()
 					.domain(this.yScale)
@@ -135,7 +156,7 @@ var demo = new Demo({
 		this.yAxis = d3.svg.axis()
 						.scale(this.canvasYScale)
 						.orient("left")
-						.ticks(14)
+						.ticks(20)
 						.tickFormat("");
 						
 
@@ -222,30 +243,36 @@ var demo = new Demo({
 		this.data = [];
 		this.data1 = [];
 		this.data2 = [];
+		this.data3 = [];
 		this.data12 = [];
 		this.updatePathData();
 
 		if (typeof AudioContext !== "undefined") {
 			this.oscillator1.frequency.setValueAtTime(this.ui.f1.value, 0);
 			this.oscillator2.frequency.setValueAtTime(this.ui.f2.value, 0);
+			this.oscillator3.frequency.setValueAtTime(this.ui.f3.value, 0);
 
 			if (e == "sound"){
 				if (this.ui.sound.value == true){
 					this.gainNode1.gain.value = this.defaultGain;
 					this.gainNode2.gain.value = this.defaultGain;
+					this.gainNode3.gain.value = this.defaultGain;
 				} else {
 					this.gainNode1.gain.value = 0;
 					this.gainNode2.gain.value = 0;
+					this.gainNode3.gain.value = 0;
 				}
 			} else if (this.ui.sound.value){
 				//very occasionally, the oscillators will be exactly out of sync so if they have the same frequency, there will be silence
 				//the following makes sure that never happens
-				if (this.ui.f1.value == this.ui.f2.value){
+				if (this.ui.f1.value == this.ui.f2.value && this.ui.f1.value == this.ui.f3.value){
 					this.gainNode1.gain.value = this.defaultGain * 2;	
 					this.gainNode2.gain.value = 0;	
+					this.gainNode3.gain.value = 0;	
 				} else {
 					this.gainNode1.gain.value = this.defaultGain;
 					this.gainNode2.gain.value = this.defaultGain;	
+					this.gainNode3.gain.value = this.defaultGain;	
 				}
 			}
 		}
@@ -255,6 +282,11 @@ var demo = new Demo({
 
 		if (e == "overlay"){
 			var waveMargin = this.setWaveMargin(this.ui.overlay.value);
+			this.path3
+				.transition()
+				.duration(500)
+				.attr("transform", "translate(0 "+-waveMargin+")")
+
 			this.path2
 				.transition()
 				.duration(500)
@@ -264,6 +296,7 @@ var demo = new Demo({
 				.transition()
 				.duration(500)
 				.attr("transform", "translate(0 "+-waveMargin+")")
+
 		}
 
 	},
@@ -274,6 +307,7 @@ var demo = new Demo({
 		this.data[0] = [];
 		this.data[1] = [];
 		this.data[2] = [];
+		this.data[3] = [];
 		
 		for (i = 0; i < this.dataLength ; i++){
 			this.data[0][i] = { 
@@ -284,17 +318,22 @@ var demo = new Demo({
 				x: this.tScale(i),
 				y: this.sine(this.ui.f2.value,this.tScale(i), 0) - 6
 			}
-
 			this.data[2][i] = {
 				x: this.tScale(i),
-				y: this.superposition(this.ui.f1.value, 0, this.ui.f2.value, 0, this.tScale(i)) - 11
+				y: this.sine(this.ui.f3.value,this.tScale(i), 0) - 10
+			}
+
+			this.data[3][i] = {
+				x: this.tScale(i),
+				y: this.superposition(this.ui.f1.value, 0, this.ui.f2.value, 0, this.ui.f3.value, 0, this.tScale(i)) - 16 // change 11?
 			}
 		
 		}
 
 		this.path1.attr("d", this.lineFunction(this.data[0]))
 		this.path2.attr("d", this.lineFunction(this.data[1]))
-		this.path12.attr("d", this.lineFunction(this.data[2]))
+		this.path3.attr("d", this.lineFunction(this.data[2]))
+		this.path12.attr("d", this.lineFunction(this.data[3]))
 		
 	},
 
@@ -333,8 +372,8 @@ var demo = new Demo({
 		    .classed("minor", true);
 	},
 
-	superposition: function(f1,phase1, f2, phase2, t){
-		return this.sine(f1,t, phase1) + this.sine(f2,t, phase2);
+	superposition: function(f1,phase1, f2, phase2,f3, phase3, t){
+		return this.sine(f1,t, phase1) + this.sine(f2,t, phase2) + this.sine(f3,t, phase3);
 	},
 
 	sine: function(f,t, phase){

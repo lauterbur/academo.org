@@ -3,53 +3,52 @@ var demo = new Demo({
 		f1: {
 			title: "\\( f_{1} \\)",
 			value: 250,
-			// range: [230, 270],
-			range: [1, 500],
-			resolution: 0.1,
+			range: [100, 1000],
+			resolution: 1,
 			units: "Hz",
 			color: "rgb(66, 104, 180)"
 		},
 		f2: {
 			title: "\\( f_{2} \\)",
 			value: 257,
-			// range: [230, 270],
-			range: [1, 500],
-			resolution: 0.1,
+			range: [100, 1000],
+			// range: [1, 500],
+			resolution: 1,
 			units: "Hz",
 			color: "#d62728"
 		},
 		f3: {
 			title: "\\( f_{3} \\)",
 			value: 257,
-			// range: [230, 270],
-			range: [1, 500],
-			resolution: 0.1,
+			range: [100, 1000],
+			// range: [1, 500],
+			resolution: 1,
 			units: "Hz",
-			color: "#2ad627"
+			color: "#228026"
 		},
 		f4: {
 			title: "\\( f_{4} \\)",
 			value: 257,
-			// range: [230, 270],
-			range: [1, 500],
-			resolution: 0.1,
+			range: [100, 1000],
+			// range: [1, 500],
+			resolution: 1,
 			units: "Hz",
-			color: "#6be627"
+			color: "#ffc300"
 		},
 		f5: {
 			title: "\\( f_{5} \\)",
 			value: 257,
-			// range: [230, 270],
-			range: [1, 500],
-			resolution: 0.1,
+			range: [100, 1000],
+			// range: [1, 500],
+			resolution: 1,
 			units: "Hz",
-			color: "#fa6627"
+			color: "rgb(150, 66, 180)"
 		},
 		zoom: {
 			title: "Zoom",
 			value: 3,
 			range: [1, 20],
-			resolution: 0.1,
+			resolution: 1,
 			input: "hidden",
 			color: "rgb(33, 203, 156)"
 		},
@@ -77,7 +76,7 @@ var demo = new Demo({
 		this.margin = {top: 20, right: 20, bottom: 60, left: 20};
 
 		this.width = $("#demo").width() - this.margin.left - this.margin.right;
-		this.height = 0.67* $("#demo").width() - this.margin.top - this.margin.bottom;
+		this.height = 1* $("#demo").width() - this.margin.top - this.margin.bottom;
 
 		this.dataLength = this.width;
 
@@ -154,28 +153,34 @@ var demo = new Demo({
 
 		this.path1 = this.svg.append("path")
 						.attr("stroke", "blue")
-						.attr("fill", "none");
+						.attr("fill", "none")
+                                                .attr("stroke-width", "2");
 
 		this.path2 = this.svg.append("path")
 						.attr("stroke", "red")
-						.attr("fill", "none");
+						.attr("fill", "none")
+                                                .attr("stroke-width", "2");
 
 		this.path3 = this.svg.append("path")
 						.attr("stroke", "green")
-						.attr("fill", "none");
+						.attr("fill", "none")
+                                                .attr("stroke-width", "2");
 
 		this.path4 = this.svg.append("path")
 						.attr("stroke", "orange")
-						.attr("fill", "none");
+						.attr("fill", "none")
+                                                .attr("stroke-width", "2");
 
 		this.path5 = this.svg.append("path")
-						.attr("stroke", "pink")
-						.attr("fill", "none");
+						.attr("stroke", "purple")
+						.attr("fill", "none")
+                                                .attr("stroke-width", "2");
 
 
 		this.path12 = this.svg.append("path")
-						.attr("stroke", "rgb(150, 66, 180)")
-						.attr("fill", "none");
+						.attr("stroke", "black")
+						.attr("fill", "none")
+                                                .attr("stroke-width", "3");
 		this.tScale = d3.scale.linear()
 					.domain([0, this.dataLength - 1])
 					.range(this.waveHorizontalExtent);
@@ -184,7 +189,7 @@ var demo = new Demo({
 					.domain(this.waveHorizontalExtent)
 					.range([0,this.width]);
 
-		this.yScale = [0, -20];
+		this.yScale = [0, -32];
 
 		this.canvasYScale = d3.scale.linear()
 					.domain(this.yScale)
@@ -341,27 +346,27 @@ var demo = new Demo({
 			this.path5
 				.transition()
 				.duration(500)
-				.attr("transform", "translate(0 "+-waveMargin+")")
+				.attr("transform", "translate(0 "+4*waveMargin+")")
 
 			this.path4
 				.transition()
 				.duration(500)
-				.attr("transform", "translate(0 "+-waveMargin+")")
+				.attr("transform", "translate(0 "+2*waveMargin+")")
 
 			this.path3
 				.transition()
 				.duration(500)
-				.attr("transform", "translate(0 "+-waveMargin+")")
+				.attr("transform", "translate(0 "+0+")")
 
 			this.path2
 				.transition()
 				.duration(500)
-				.attr("transform", "translate(0 "+waveMargin+")")
+				.attr("transform", "translate(0 "+2*-waveMargin+")")
 
 			this.path1
 				.transition()
 				.duration(500)
-				.attr("transform", "translate(0 "+-waveMargin+")")
+				.attr("transform", "translate(0 "+4*-waveMargin+")")
 
 		}
 
@@ -401,7 +406,7 @@ var demo = new Demo({
 
 			this.data[5][i] = {
 				x: this.tScale(i),
-				y: this.superposition(this.ui.f1.value, 0, this.ui.f2.value, 0, this.ui.f3.value, 0, this.ui.f4.value, 0, this.ui.f5.value, 0, this.tScale(i)) - 24 // this is separated by 6
+				y: this.superposition(this.ui.f1.value, 0, this.ui.f2.value, 0, this.ui.f3.value, 0, this.ui.f4.value, 0, this.ui.f5.value, 0, this.tScale(i)) - 26 // this is separated by 6-8
 			}
 		
 		}

@@ -27,6 +27,24 @@ var demo = new Demo({
 			units: "Hz",
 			color: "#2ad627"
 		},
+		f4: {
+			title: "\\( f_{4} \\)",
+			value: 257,
+			// range: [230, 270],
+			range: [1, 500],
+			resolution: 0.1,
+			units: "Hz",
+			color: "#6be627"
+		},
+		f5: {
+			title: "\\( f_{5} \\)",
+			value: 257,
+			// range: [230, 270],
+			range: [1, 500],
+			resolution: 0.1,
+			units: "Hz",
+			color: "#fa6627"
+		},
 		zoom: {
 			title: "Zoom",
 			value: 3,
@@ -73,11 +91,15 @@ var demo = new Demo({
 		  this.gainNode1 = this.audioContext.createGain();
 		  this.gainNode2 = this.audioContext.createGain();
 		  this.gainNode3 = this.audioContext.createGain();
+		  this.gainNode4 = this.audioContext.createGain();
+		  this.gainNode5 = this.audioContext.createGain();
 		  
 		  
 		  this.gainNode1.gain.value = 0.0;
 		  this.gainNode2.gain.value = 0.0;
 		  this.gainNode3.gain.value = 0.0;
+		  this.gainNode4.gain.value = 0.0;
+		  this.gainNode5.gain.value = 0.0;
 		  
 
 		  this.oscillator1 = this.audioContext.createOscillator();
@@ -98,11 +120,25 @@ var demo = new Demo({
 		  this.oscillator3.connect(this.gainNode3);
 		  this.oscillator3.start(0);
 
+		  this.oscillator4 = this.audioContext.createOscillator();
+		  this.oscillator4.type = 'sine';
+		  this.oscillator4.frequency.setValueAtTime(this.ui.f4.value, 0);
+		  this.oscillator4.connect(this.gainNode4);
+		  this.oscillator4.start(0);
+
+		  this.oscillator5 = this.audioContext.createOscillator();
+		  this.oscillator5.type = 'sine';
+		  this.oscillator5.frequency.setValueAtTime(this.ui.f5.value, 0);
+		  this.oscillator5.connect(this.gainNode5);
+		  this.oscillator5.start(0);
+
 
 
 		  this.gainNode1.connect(this.audioContext.destination);
 		  this.gainNode2.connect(this.audioContext.destination);
 		  this.gainNode3.connect(this.audioContext.destination);
+		  this.gainNode4.connect(this.audioContext.destination);
+		  this.gainNode5.connect(this.audioContext.destination);
 		}
 
 
@@ -126,6 +162,14 @@ var demo = new Demo({
 
 		this.path3 = this.svg.append("path")
 						.attr("stroke", "green")
+						.attr("fill", "none");
+
+		this.path4 = this.svg.append("path")
+						.attr("stroke", "orange")
+						.attr("fill", "none");
+
+		this.path5 = this.svg.append("path")
+						.attr("stroke", "pink")
 						.attr("fill", "none");
 
 
@@ -244,6 +288,8 @@ var demo = new Demo({
 		this.data1 = [];
 		this.data2 = [];
 		this.data3 = [];
+		this.data4 = [];
+		this.data5 = [];
 		this.data12 = [];
 		this.updatePathData();
 
@@ -251,28 +297,38 @@ var demo = new Demo({
 			this.oscillator1.frequency.setValueAtTime(this.ui.f1.value, 0);
 			this.oscillator2.frequency.setValueAtTime(this.ui.f2.value, 0);
 			this.oscillator3.frequency.setValueAtTime(this.ui.f3.value, 0);
+			this.oscillator4.frequency.setValueAtTime(this.ui.f4.value, 0);
+			this.oscillator5.frequency.setValueAtTime(this.ui.f5.value, 0);
 
 			if (e == "sound"){
 				if (this.ui.sound.value == true){
 					this.gainNode1.gain.value = this.defaultGain;
 					this.gainNode2.gain.value = this.defaultGain;
 					this.gainNode3.gain.value = this.defaultGain;
+					this.gainNode4.gain.value = this.defaultGain;
+					this.gainNode4.gain.value = this.defaultGain;
 				} else {
 					this.gainNode1.gain.value = 0;
 					this.gainNode2.gain.value = 0;
 					this.gainNode3.gain.value = 0;
+					this.gainNode4.gain.value = 0;
+					this.gainNode5.gain.value = 0;
 				}
 			} else if (this.ui.sound.value){
 				//very occasionally, the oscillators will be exactly out of sync so if they have the same frequency, there will be silence
 				//the following makes sure that never happens
-				if (this.ui.f1.value == this.ui.f2.value && this.ui.f1.value == this.ui.f3.value){
+				if (this.ui.f1.value == this.ui.f2.value && this.ui.f1.value == this.ui.f3.value && this.ui.f1.value == this.ui.f4.value && this.ui.f1.value == this.ui.f5.value){
 					this.gainNode1.gain.value = this.defaultGain * 2;	
 					this.gainNode2.gain.value = 0;	
 					this.gainNode3.gain.value = 0;	
+					this.gainNode4.gain.value = 0;	
+					this.gainNode5.gain.value = 0;	
 				} else {
 					this.gainNode1.gain.value = this.defaultGain;
 					this.gainNode2.gain.value = this.defaultGain;	
 					this.gainNode3.gain.value = this.defaultGain;	
+					this.gainNode4.gain.value = this.defaultGain;	
+					this.gainNode5.gain.value = this.defaultGain;	
 				}
 			}
 		}
@@ -282,6 +338,16 @@ var demo = new Demo({
 
 		if (e == "overlay"){
 			var waveMargin = this.setWaveMargin(this.ui.overlay.value);
+			this.path5
+				.transition()
+				.duration(500)
+				.attr("transform", "translate(0 "+-waveMargin+")")
+
+			this.path4
+				.transition()
+				.duration(500)
+				.attr("transform", "translate(0 "+-waveMargin+")")
+
 			this.path3
 				.transition()
 				.duration(500)
@@ -308,11 +374,13 @@ var demo = new Demo({
 		this.data[1] = [];
 		this.data[2] = [];
 		this.data[3] = [];
+		this.data[4] = [];
+		this.data[5] = [];
 		
 		for (i = 0; i < this.dataLength ; i++){
 			this.data[0][i] = { 
 				x: this.tScale(i),
-				y: this.sine(this.ui.f1.value,this.tScale(i),0) - 2
+				y: this.sine(this.ui.f1.value,this.tScale(i),0) - 2 // these are separated by 4
 			}
 			this.data[1][i] = {
 				x: this.tScale(i),
@@ -322,10 +390,18 @@ var demo = new Demo({
 				x: this.tScale(i),
 				y: this.sine(this.ui.f3.value,this.tScale(i), 0) - 10
 			}
-
 			this.data[3][i] = {
 				x: this.tScale(i),
-				y: this.superposition(this.ui.f1.value, 0, this.ui.f2.value, 0, this.ui.f3.value, 0, this.tScale(i)) - 16 // change 11?
+				y: this.sine(this.ui.f4.value,this.tScale(i), 0) - 14
+			}
+			this.data[4][i] = {
+				x: this.tScale(i),
+				y: this.sine(this.ui.f5.value,this.tScale(i), 0) - 18
+			}
+
+			this.data[5][i] = {
+				x: this.tScale(i),
+				y: this.superposition(this.ui.f1.value, 0, this.ui.f2.value, 0, this.ui.f3.value, 0, this.ui.f4.value, 0, this.ui.f5.value, 0, this.tScale(i)) - 24 // this is separated by 6
 			}
 		
 		}
@@ -333,7 +409,9 @@ var demo = new Demo({
 		this.path1.attr("d", this.lineFunction(this.data[0]))
 		this.path2.attr("d", this.lineFunction(this.data[1]))
 		this.path3.attr("d", this.lineFunction(this.data[2]))
-		this.path12.attr("d", this.lineFunction(this.data[3]))
+		this.path4.attr("d", this.lineFunction(this.data[3]))
+		this.path5.attr("d", this.lineFunction(this.data[4]))
+		this.path12.attr("d", this.lineFunction(this.data[5]))
 		
 	},
 
@@ -372,8 +450,8 @@ var demo = new Demo({
 		    .classed("minor", true);
 	},
 
-	superposition: function(f1,phase1, f2, phase2,f3, phase3, t){
-		return this.sine(f1,t, phase1) + this.sine(f2,t, phase2) + this.sine(f3,t, phase3);
+	superposition: function(f1,phase1, f2, phase2,f3, phase3, f4, phase4, f5, phase5, t){
+		return this.sine(f1,t, phase1) + this.sine(f2,t, phase2) + this.sine(f3,t, phase3) + this.sine(f4,t, phase4) + this.sine(f5,t, phase5);
 	},
 
 	sine: function(f,t, phase){

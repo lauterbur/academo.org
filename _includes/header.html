@@ -1,86 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>{{page.title}} | {{ site.name }}</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	{% if page.url == "/" %}<meta name="google-site-verification" content="e-G7_FBQBrCiTbxovimqQQxUkQ3sc5s1oYrSOCKUZPM" />{% endif %}
+<header class="site-header">
 
-	{% if page.blurb %}
-		<meta name="description" content="{{page.blurb | strip_html }}">
-	{% endif %}
-	<link rel="shortcut icon" type="image/png" href="/favicon-new-v2.png">
-	<link rel="stylesheet" href="/scss/main.css?v={{ site.time | date: "%s" }}">
+  <div class="wrapper">
 
-	{% strip %}
-		{% if page.layout == 'demo' %}
-			{% if page.twitterCard == true %}
-				<meta name="twitter:card" content="summary_large_image">
-				<meta name="twitter:site" content="@AcademoOrg">
-				<meta name="twitter:title" content="{{page.title}}">
-				<meta name="twitter:description" content="{{page.blurb | strip_html}}">
-				<meta name="twitter:image" content="https://academo.org{{page.url}}twitter-card.png">
-			{% endif %}
-			{% if page.facebookOG == true %}
-				<meta property="og:url"	content="https://academo.org{{page.url}}" />
-				<meta property="og:site_name" content="Academo.org"/>
-				<meta property="og:title" content="{{page.title}}"/>
-				<meta property="og:description" content="{{page.blurb | strip_html}}"/>
-				<meta property="og:image" content="https://academo.org{{page.url}}facebook-og.png" />
-				<meta property="og:image:width" content="1200" /> 
-				<meta property="og:image:height" content="630" />
-			{% endif %}
-			{% for stylesheet in page.stylesheets %}
-				{% capture my_variable %}{{page.url | remove_first:'/' }}{{stylesheet}}{% endcapture %}
-				<style type="text/css" class='demo-specific-styles'>
-{% render {{my_variable}} %}
-				</style>
-			{% endfor %}
-		{% endif %}
-	{% endstrip %}
- 
-	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-	<!--[if lt IE 9]>
-		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+    <a class="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
 
-</head>
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
 
-<body class='body--shaded {% if page.url == "/" %}home{% endif %} layout--{{page.layout}} '>
+      <div class="trigger">
+        {% for my_page in site.pages %}
+          {% if my_page.title %}
+          <a class="page-link" href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </nav>
 
-	<div class="header">
-		<div class="header-upper">
-			<div class="header-inner">
-				<a class="logo" href="/"><img src="/icon.png" alt="">Academo</a>
-				<ul class="nav nav--primary">
-					<li><a class="{% if page.url == '/about/' %} current {% endif %}" href="/about/">About</a></li>
-					<li><a class="{% if page.url == '/search/' %} current {% endif %}" href="/search/">Search</a></li>
-					<li><a class="{% if page.url == '/contact/' %} current {% endif %}" href="/contact/">Contact</a></li>
-					<li><a class="{% if page.url == '/submit-an-idea/' %} current {% endif %}" href="/submit-an-idea/">Submit an idea</a></li>
-					<li><a class="{% if page.url == '/sponsor/' %} current {% endif %}" href="https://www.patreon.com/academo" rel="noreferrer" target="_blank">Sponsor</a></li>
-					</li>
-					<li class="social--twitter"><a rel="noreferrer" target='_blank' aria-label="Twitter" href="https://twitter.com/AcademoOrg"><i class="icon-twitter"></i></a></li>
-					<li class="social--facebook"><a rel="noreferrer" target='_blank' aria-label="Facebook" href="https://facebook.com/academo.org"><i class="icon-facebook"></i></a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="header-lower">
-			<div class="header-inner">
-				<ul class="nav nav--secondary">
-					<li><a class="mobile-show {% if page.url == '/demos/' %} current {% endif %}" href="/demos/">Browse all demos</a></li>
-					<li><a class="mobile-hide {% if page.url == '/demos/' %} current {% endif %}" href="/demos/">All</a></li>
-					<li><a class="mobile-hide {% if page.url == '/engineering/' %} current {% endif %}" href="/engineering/">Engineering</a></li>
-					<li><a class="mobile-hide {% if page.url == '/geography/' %} current {% endif %}" href="/geography/">Geography</a></li>
-					<li><a class="mobile-hide {% if page.url == '/maths/' %} current {% endif %}" href="/maths/">Maths</a></li>
-					<li><a class="mobile-hide {% if page.url == '/music/' %} current {% endif %}" href="/music/">Music</a></li>
-					<li><a class="mobile-hide {% if page.url == '/physics/' %} current {% endif %}" href="/physics/">Physics</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
+  </div>
 
-	<div class="wrapper">
-		<div class='sponsor-wrapper {% if page.layout == "demo" %}js-sponsor-wrapper{% endif %}'>
-		</div>
-		<div class="main">
-
+</header>

@@ -1,126 +1,38 @@
+<footer class="site-footer">
 
+  <div class="wrapper">
 
-		<script src="{{site.jquery_path}}"></script>
-		<script src="/js/all.js?v={{ site.time | date: "%s" }}"></script> 
+    <h2 class="footer-heading">{{ site.title }}</h2>
 
-		{% if page.layout == 'quiz' %}
-			<script src="/js/lib/slickQuiz.js"></script>
-			<script>
-				$(function () {
-	    			$('#slickQuiz').slickQuiz({
-	      				checkAnswerText: "Check answer",
-	      				backButtonText: "&laquo; Back",
-	      				skipStartButton: true,
-	      				disableRanking: true,
-	      				preventUnanswered: true,
-	      				perQuestionResponseAnswers: true,
-	      				tryAgainText: "Restart quiz"
-	    			});
-				});
-			</script>
-		{% endif %}
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>{{ site.title }}</li>
+          <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+        </ul>
+      </div>
 
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          {% if site.github_username %}
+          <li>
+            {% include icon-github.html username=site.github_username %}
+          </li>
+          {% endif %}
 
-		{% if page.layout == 'demo' %}
+          {% if site.twitter_username %}
+          <li>
+            {% include icon-twitter.html username=site.twitter_username %}
+          </li>
+          {% endif %}
+        </ul>
+      </div>
 
-			{% strip %}
+      <div class="footer-col footer-col-3">
+        <p>{{ site.description }}</p>
+      </div>
+    </div>
 
-				{% if page.latex %}
+  </div>
 
-				  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-				  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-				  <script type="text/javascript">
-				  	window.MathJax = {
-						tex: {
-							tags: 'ams'
-						}
-					};
-				  </script>
-
-				{% endif %}
-
-				{% for script in page.cdn %}
-					<script src="{{script}}"></script>
-				{% endfor %}
-
-				{% for library in page.libraries %}
-					<script src="/js/lib/{{library}}" class='js-demo-library'></script>
-				{% endfor %}
-
-				{% if page.codepen != true %}
-
-					{% for script in page.scripts %}
-
-						{% capture demo_script %}{{page.url}}{{script}}{% endcapture %}
-							
-						    {% for file in site.static_files %}
-							    {% if demo_script == file.path %}
-									<script src="{{demo_script}}?v={{file.modified_time | date: "%s" }}"></script>
-								{% endif %}
-						    {% endfor %}
-
-					{% endfor %}
-
-				{% else %}
-
-					{% capture my_variable %}{{page.url | remove_first:'/' }}demo.js{% endcapture %}
-					<script id='codepen-script'>
-/* This code comes from Academo.org */
-{% render {{my_variable}} raw %}
-					</script>
-
-				{% endif %}
-				
-		    {% endstrip %}
-
-			<script>
-			    //ASSET SERVING
-			    var assetPath = "{{ site.assets_server }}";
-
-			    $(document).trigger({
-			    	type: "scriptLoaded"
-			    });
-		    </script>
-
-	    {% endif %}
-
-	    {% comment %}<!--Include javascript for search page -->{% endcomment %}
-	    {% if page.title == 'Search' %}
-		    {% comment %}{% bundle %} [/js/lunr.js, /js/mustache.js, /js/URI.js, /js/jquery.lunr.search.js, /js/search.js]{% endbundle %}{% endcomment %}
-		    <script src='/js/search.min.js'></script>
-	    {% endif %}
-
-
-	    {% if page.title == 'Spectrogram' %}
-	    <script type='text/javascript' src='/articles/spectrogram.js'></script>
-	    <script type='text/javascript' src='/articles/academo-spectrogram.js?v=2'></script>
-	    {% endif %}
-
-	    {% if page.title == 'Oscilloscope' %}
-	    <script type='text/javascript' src='/articles/oscilloscope.js?v=2'></script>
-	    <script type='text/javascript' src='/articles/academo-oscilloscope.js?v=2'></script>
-	    {% endif %}
-
-
-
-	    <script>
-		    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		    	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		    	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		    if (window.location.host == 'academo.org') {
-		    	ga('create', 'UA-17960919-9', 'academo.org');
-		    	ga('send', 'pageview');
-		    }
-	    </script>
-		</div>
-	    <div class="push"></div>
-	    </div>
-	    <div class="footer">
-	    	<div class="footer-inner">
-		    	<p>&copy; Academo.org {{ 'now' | date: "%Y" }}.<br> Source code available at <a href="https://github.com/edwardball/academo.org">GitHub.com</a></p>
-	    	</div>
-	    </div> <!-- End of content -->
-	</body>
-</html>
+</footer>

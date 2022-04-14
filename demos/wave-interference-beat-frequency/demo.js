@@ -10,7 +10,7 @@ var demo = new Demo({
 		},
 		f2: {
 			title: "\\( f_{2} \\)",
-			value: 257,
+			value: 250,
 			range: [100, 1000],
 			// range: [1, 500],
 			resolution: 1,
@@ -19,7 +19,7 @@ var demo = new Demo({
 		},
 		f3: {
 			title: "\\( f_{3} \\)",
-			value: 257,
+			value: 250,
 			range: [100, 1000],
 			// range: [1, 500],
 			resolution: 1,
@@ -28,7 +28,7 @@ var demo = new Demo({
 		},
 		f4: {
 			title: "\\( f_{4} \\)",
-			value: 257,
+			value: 250,
 			range: [100, 1000],
 			// range: [1, 500],
 			resolution: 1,
@@ -37,7 +37,7 @@ var demo = new Demo({
 		},
 		f5: {
 			title: "\\( f_{5} \\)",
-			value: 257,
+			value: 250,
 			range: [100, 1000],
 			// range: [1, 500],
 			resolution: 1,
